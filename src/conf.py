@@ -1,6 +1,3 @@
-import os
-import sys
-import json
 
 CORPUS_FOLDER = "../project/corpus"
 OUT_FOLDER = "../project/out"
