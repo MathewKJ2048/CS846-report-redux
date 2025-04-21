@@ -1,7 +1,7 @@
 import os
 import sys
+import json
 
-
-CORPUS = "../project/corpus"
-OUT = "../project/out"
-MODELS = "../project/out_models"
+CORPUS_FOLDER = "../project/corpus"
+OUT_FOLDER = "../project/out"
+MODELS_FOLDER = "../project/out_models"
