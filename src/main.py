@@ -6,4 +6,6 @@ from text_analysis import *
 
 ## summary_analysis()
 
-reconstruction_analysis()
+## reconstruction_analysis()
+
+correlation_analysis()

@@ -9,31 +9,82 @@ index = get_index()
 sub_index = list(index.keys())[:1000]
 
 
+def get_dataset_summary():
+	dataset = []
+	for i in index:
+		if len(index[i]) >= 1:
+			dataset.append(i)
+	return dataset
 
+def get_dataset_reconstructed():
+	dataset = []
+	for i in index:
+		if len(index[i]) == 2:
+			dataset.append(i)
+	return dataset
+
+def get_reconstructed(i):
+	return process_response(index[i][LLM_NAME+"(reconstruction)"])["code"]
+
+def get_summary(i):
+	response = process_response(index[i][LLM_NAME+"(summary)"])
+	thought = response["think"]
+	text = response["text"]
+	return thought, text
+
+def correlation_analysis():
+	# correlate lines of model with lines of summary text
+	# correlate lines of model with lines of reconstructed
+	dset_recon = get_dataset_reconstructed()
+	dset_sum = get_dataset_summary()
+	print(len(dset_sum))
+
+	recon_x = []
+	recon_y = []
+	for i in dset_recon:
+		model_text = read_file(i)
+		recon_text = get_reconstructed(i)
+		if not recon_text:
+			continue
+		recon_x.append(len(model_text))
+		recon_y.append(len(recon_text))
+	correlation_scatter_plot(recon_x,recon_y,"number of characters in original","number of characters in reconstruction", "correlation between size of original and reconstructed model")
+
+	sum_x = []
+	sum_y = []
+	for i in dset_sum:
+		model_text = read_file(i)
+		think, summary = get_summary(i)
+		if not summary:
+			continue
+		sum_x.append(len(model_text))
+		sum_y.append(len(summary))
+	correlation_scatter_plot(sum_x,sum_y,"number of characters in model","number of characters in summary", "correlation between size of model and LLM-generated summary")
+
+
+
+		
 
 def reconstruction_analysis():
 
 	fields = ["lines","characters","tokens"]
 	def get_data(model_text):
 		return {
-			'lines':len(model_text.split(" ")),
+			'lines':len(model_text.split("\n")),
 			'characters':len(model_text),
 			'tokens':count_tokens(model_text)
 		}
-	dataset = []
-	for i in index:
-		if len(index[i]) == 2:
-			dataset.append(i)
+	dataset = get_dataset_reconstructed()
 
 	analysis_data_original = []
 	analysis_data_reconstructed = []
 	for i in dataset:
 		modeltext = read_file(i)
-		response = process_response(index[i][LLM_NAME+"(reconstruction)"])
-		if not response["code"]:
+		reconstructed = get_reconstructed(i)
+		if not reconstructed:
 			continue
 		analysis_data_original.append(get_data(modeltext))
-		analysis_data_reconstructed.append(get_data(response["code"]))
+		analysis_data_reconstructed.append(get_data(reconstructed))
 	
 
 	def generate_graph(field):
@@ -53,18 +104,13 @@ def summary_analysis():
 	number_of_sentences_s = []
 	number_of_words_t = []
 	number_of_sentences_t = []
-	dataset = []
-	for i in index:
-		if index[i] is not {}:
-			dataset.append(i)
+	dataset = get_dataset_summary()
 	ct=0
 	for i in dataset:
 		try:
 			ct+=1
 			print(ct/len(dataset))
-			response = process_response(index[i][LLM_NAME+"(summary)"])
-			thought = response["think"]
-			text = response["text"]
+			thought, text = get_dataset_summary(i)
 			number_of_sentences_s.append(len(text.split(".")))
 			number_of_words_s.append(len(text.split(" ")))
 			number_of_sentences_t.append(len(thought.split(".")))
@@ -83,8 +129,6 @@ def corpus_analysis():
 	number_of_lines = []
 	number_of_characters = []
 	number_of_tokens = []
-
-	
 
 	i = 0
 	for p in index:
@@ -132,6 +176,26 @@ def generate_histograms(data,legend,title):
 	plt.title('Histogram with Power-Law Bins and Log Y-Axis')
 	plt.grid(True, which="both", ls="--", alpha=0.3)
 	plt.legend()
+	plt.title(title)
+	plt.savefig(title)
+
+
+
+
+def correlation_scatter_plot(x_data,y_data,xv,yv,title):
+
+	plt.clf()
+	plt.scatter(x_data, y_data, color='blue', alpha=0.7, edgecolors='w', s=100)
+
+	# Set logarithmic scales for both axes
+	plt.xscale('log')
+	plt.yscale('log')
+
+	# Add labels and title
+	plt.xlabel(xv+' (log scale)', fontsize=12)
+	plt.ylabel(yv+' (log scale)', fontsize=12)
+	plt.title('Scatter Plot of Correlation between '+xv+" and "+yv, fontsize=14)
+	plt.grid(True)
 	plt.title(title)
 	plt.savefig(title)
 
