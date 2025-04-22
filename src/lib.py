@@ -14,12 +14,15 @@ def extract_code(text):
 def extract_thoughts(text):
 	m = re.search(r"<think>([^<]*)</think>",text,re.DOTALL)
 
-print(extract_code("```\n\n\naaabbbcc```"))
-
 def read_file(path):
 	with open(path) as f:
 		data = f.read()
 	return data
+
+def get_index():
+	PATH = ("./out/index.json")
+	with open(PATH) as f:
+		return json.load(f)
 
 def process_response(path):
 	data = read_file(path)
