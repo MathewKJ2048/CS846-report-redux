@@ -6,6 +6,16 @@ import re
 import matplotlib.pyplot as plt
 
 
+def enspacify(text):
+	text = text.replace("\n"," ")
+	text = text.replace("\t"," ")
+	text = text.replace("\r"," ")
+	return text
+
+def count_tokens(text):
+		text = enspacify(text)
+		return len(text.split(" "))
+
 def extract_code(text):
 	m = re.search(r"```(.*)```",text,re.DOTALL)
 	if m:

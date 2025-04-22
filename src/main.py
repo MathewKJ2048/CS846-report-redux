@@ -4,4 +4,6 @@ from index import *
 from text_analysis import *
 
 
-summary_analysis()
+## summary_analysis()
+
+reconstruction_analysis()

@@ -216,6 +216,8 @@ After each response generation, a `.stream` file is created and stored in perman
 
 ### Prompt engineering
 
+![](./images/pipeline.svg)
+
 In accordance with the standard best pracitces for prompt engineering, the following was done:
 
 1) The instructions were appended to the beginning of the prompt, to ensure that sufficient attention was allocated to the instruction.
@@ -277,6 +279,15 @@ A simialr analysis is carried out for the number of words and sentences in the s
 The relative sharpness of the distribution peaks for the responses, in comparison to the distributions for the original model, show that deepseek tends to have a fairly limited response window size.
 
 Further investigation of the relationship between the size of the model being summarized and the size of the summary is shown below:
+
+![](./Comparing%20number%20of%20characters%20in%20the%20corpus%20vs%20the%20reconstructed%20models.png)
+
+![](./Comparing%20number%20of%20lines%20in%20the%20corpus%20vs%20the%20reconstructed%20models.png)
+
+![](./Comparing%20number%20of%20tokens%20in%20the%20corpus%20vs%20the%20reconstructed%20models.png)
+
+From the data, it is clear that the LLM is capable of producing models whose length is at or below the mode for the dataset. However, for large models, the reconstructions produced by the LLM rarely reach a similar length. This suggests that the best use of AI involves the creation of small modular Alloy code, rather than large monoliths.
+
 
 
 
