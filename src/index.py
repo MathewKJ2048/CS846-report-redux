@@ -27,7 +27,7 @@ def make_index():
 			llm_name = extract_first(out_data)
 			f_index_key = CORPUS_FOLDER+fkey[8:]
 			if f_index_key in FILENAMES:
-				FILENAMES[f_index_key][llm_name] = fn
+				FILENAMES[f_index_key][llm_name+"(summary)"] = fn
 			else:
 				error_out+=1
 			total_out+=1
@@ -44,7 +44,7 @@ def make_index():
 			llm_name = extract_first(out_data)
 			f_index_key = CORPUS_FOLDER+fkey[8:]
 			if f_index_key in FILENAMES:
-				FILENAMES[f_index_key][llm_name] = fn
+				FILENAMES[f_index_key][llm_name+"(reconstruction)"] = fn
 			else:
 				error_models+=1
 			total_models+=1

@@ -1,6 +1,7 @@
 ## Reconstructs all assets from the current state of the corpus
 
 from index import *
+from text_analysis import *
 
 
-make_index()
+summary_analysis()
