@@ -253,9 +253,17 @@ The constituent parts of the response a separated out via matching using regular
 
 ### Analysis of the corpus
 
-This section deals with a general summary of the entire corpus
+Initial analysis of the corpus consists of examining simple characteristics like the number of lines, number of tokens and number of characters.
 
-- running the analysis with the analysis repository
+![](./Number%20of%20characters,%20distribution%20in%20corpus.png)
+
+![](./Number%20of%20lines,%20distribution%20in%20corpus.png)
+
+![](./Number%20of%20tokens,%20distribution%20in%20corpus.png)
+
+When examining the number of lines, there seems to be a large number of `.als` files with very few lines (which could be because of a large number of empty or very small models in the corpus).
+
+
 
 
 ### Analysis of summaries
@@ -267,6 +275,8 @@ This section deals with the subset of models which summaries were created for
 
 manual analysis of 100 models for correctness:
 - number of predicates and signatures explained correctly
+
+
 
 
 ### Analysis of reconstructed models
