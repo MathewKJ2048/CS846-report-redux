@@ -143,3 +143,29 @@ def correlation_scatter_plot(x_data,y_data,xv,yv,title):
 	plt.grid(True)
 	plt.title(title)
 	plt.savefig(title)
+
+class Node:
+	def __init__(self):
+		self.children = []
+		self.parent = None
+	def encode(self):
+		s = "0"
+		child_codes = []
+		for c in self.children:
+			child_codes.append(c.encode())
+		child_codes.sort()
+		for c in child_codes:
+			s+=c
+		s+="1"
+		return s
+	def decode(code):
+		pt = Node()
+		for c in code:
+			if c == "0":
+				temp = Node()
+				temp.parent = pt
+				pt.children.append(temp)
+				pt = temp
+			else:
+				pt = pt.parent
+		return pt.children[0]

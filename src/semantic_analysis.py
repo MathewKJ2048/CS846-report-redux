@@ -65,6 +65,34 @@ def parse(model_text):
 		"sigs":get_sigs(model_text)
 	}
 
+
+def generate_tree(signature_list):
+	name_list = {}
+
+	# put strings as keys, blank nodes
+	for s in signature_list:
+		name_list[s.name] = Node()
+		if s.parent:
+			name_list[s.parent] = Node()
+
+	# solidify parentage
+	for s in signature_list:
+		s_node = name_list[s.name]
+		if s.parent:
+			p_node = name_list[s.parent]
+			p_node.children.append(s_node)
+			s_node.parent = p_node
+
+	# convert forest to single tree
+	phantom = Node()
+	for name in name_list:
+		s = name_list[name]
+		if not s.parent:
+			s.parent = phantom
+			phantom.children.append(s)
+	return phantom
+
+
 class Signature:
 	def __init__(self,text):
 		m = re.search(r"sig ([^ ]*) ([^{}]*)({[^{}]*})",text)
@@ -86,16 +114,31 @@ class Signature:
 
 def get_sigs(model_text):
 	sigs = re.findall(r"(?:abstract)? sig [^ ]* [^{}]*{[^{}]*}",model_text)
-	signatures = []
-	for s in sigs:
-		signatures.append(Signature(s))
-	return signatures
+	print(sigs)
+	return [Signature(s) for s in sigs]
 
 def get_comments(model_text):
 	model_text+=("\n")
 	comments = re.findall(r"\/\/[^\n]*\n",model_text)
 	return [c[2:-1] for c in comments]
 
+
+def comparative_corelation_analysis(func,quantity):
+	dset = get_dataset_reconstructed()
+	original_dataset = []
+	recons_dataset = []
+	for i in dset:
+		model_text = read_file(i)
+		recon_text = get_reconstructed(i)
+		if not recon_text:
+			continue
+		original_als = parse(model_text)
+		recons_als = parse(recon_text)
+		original_dataset.append(func(original_als))
+		recons_dataset.append(func(recons_als))
+	print(len(original_dataset))
+	correlation_scatter_plot(original_dataset,recons_dataset,
+	quantity+" in original models",quantity+" in reconstructed models","Correlation between "+quantity+" in the original and reconstructed models")
 
 
 def comparative_distribution_analysis(func,quantity):
@@ -141,7 +184,11 @@ def signature_preliminary_analysis():
 		return [len(s.body) for s in parse_data["sigs"]]
 	comparative_distribution_analysis(number,"number of signatures")
 	comparative_distribution_analysis(size,"size of the signature bodies")
+	comparative_corelation_analysis(number,"number of signatures")
 
-signature_preliminary_analysis()
+
+slist = parse(test_model)["sigs"]
+print(slist)
+print(generate_tree(slist).encode())
 
 

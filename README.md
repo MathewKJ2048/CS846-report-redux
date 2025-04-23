@@ -334,7 +334,73 @@ The LLM tends to create models with under 10 signatures. This suggests that a lo
 
 This suggests that creating multiple `.als` files with a small number of small signatures will result in a better model, which is in line with generally recommended coding practices.
 
+![](./Correlation%20between%20number%20of%20signatures%20in%20the%20original%20and%20reconstructed%20models.png)
 
+This shows that the reconstructed models tends to have a number of signatures lesser than or equal to the number of signatures in the original model, with a quick drop-off for models having more than 10 signatures, which supports the conclusions drawn from the earlier results.
+
+
+### Analysis of signature inheritance:
+
+In general, inheritance can be represented via a directed acyclic graph [cite], where each node corresponds to a single signature. Signatures are categorized as follows:
+
+1) type signatures (declared using the `extends` keyword)
+2) subset signatures (declared using the `in` keyword)
+
+Due to additional constraints imposed on type signatures in Alloy, the graph associated with the relations between them forms a forest-like structure, one with a set of rooted trees [cite]
+in the top-level types.
+
+While determining isomorphism for arbitrary graphs is a hard problem, determining isomorphism for sets of rooted trees is simple.
+
+```
+Algorithm:
+
+function encode(root): # returns a unique string representation of the tree whose root is given
+	if root is None:
+		return ""
+	child_codes = []
+	for c in root.children:
+		child_codes.append(tree_hash(root))
+	s = "0"
+	child_codes.sort()
+	for c in child_codes:
+		s.append(c)
+	s+="1"
+	return s
+```
+
+The given algorithm produces a unique binary string for every rooted tree. For a forest of trees, a new tree is constructed where each top-level node in the forest is a child of a ultimate root node, to which this algorithm is then applied.
+
+```
+Algorithm:
+
+function reconstruct(tree_code)
+	p = None
+	for n in tree_code:
+		if n == 0:
+			c = Node()
+			c.parent = p
+			if p:
+				p.children.append(c)
+			p = c
+		else:
+			p = p.parent
+	return p
+```
+
+For brevity, a formal proof of correctness of the algorithms is omitted. The existence of a unique encoding and a reversible reconstruction function prove that the encoding is bijective. Applying this algorithm to the graphs associated with type signature inheritance relations, we used it along with a hashtable to enumerate the different inheritance relations in the corpus and identify the relative distributions.
+
+```
+Algorithm:
+
+table = {}
+for each model m:
+	parse the model and identify the signatures
+	construct a graph g representing the inheritance relations
+	e = encode(g)
+	if not table[e]:
+		table[e]=0
+	table[e]+=1
+```
 
 
 - inheritace structure
@@ -385,4 +451,16 @@ This section deals with the subset of models which summaries were created for, f
 
 - Software Abstractions, D. Jackson
 - Static Profiling of Alloy Models - Elias Eid, Nancy A. Day
+https://alloytools.org/download/alloy-language-reference.pdf says 
+
+The subset signatures and their parents
+therefore form a directed acyclic graph, rooted in type signatures. The
+type of a subset signature is a union of top-level types or subtypes, con-
+sisting of the parents of the subset that are types, and the types of the
+parents that are subsets.
+
+he type signatures therefore form
+a type hierarchy whose structure is a forest: a collection of trees rooted
+in the top-level types.
+
 - relevant papers?
