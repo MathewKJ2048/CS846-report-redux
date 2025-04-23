@@ -119,18 +119,17 @@ def comparative_distribution_analysis(func,quantity):
 			['original','reconstructed'],
 			"Comparing "+quantity+" in the corpus vs the reconstructed models")
 
-def get_comment_number(parse_data):
-	return len(parse_data["comments"])
-
-comparative_distribution_analysis(get_comment_number,"number of comments")
 
 
-ds = get_dataset_reconstructed()
-for i in ds:
-	reconsms = get_reconstructed(i)
-	if reconsms:
-		print(reconsms)
-		print("--------------------")
-		print(get_comments(reconsms))
-		i = input()
+
+def comment_analysis():
+	def get_comment_number(parse_data):
+		return len(parse_data["comments"])
+	def total_comment_size_words(parse_data):
+		return sum([len(c.split(" ")) for c in parse_data["comments"]])
+	comparative_distribution_analysis(get_comment_number,"number of comments")
+	comparative_distribution_analysis(total_comment_size_words,"total number of words in the comments")
+
+comment_analysis()
+
 

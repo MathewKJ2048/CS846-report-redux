@@ -302,7 +302,23 @@ When the relation between the sizes of the original model, the reconstruction an
 2) There is no correlation between the length of the summary and the length of the model being summarized, possibly because the LLM uses all the available response length to explain the model. In case of simple models, the explanation could be more verbose, expanding to fill up the response window.
 
 
-- correlation between distribution of comment lengths
+### Analysis of comments:
+
+For languages which are designed to be easily readable, the best coding standards recommend self-commented code whose purpose is evident upon reading (for instance, using practices like descriptive variable names). In case the language's syntax is highly specialized or otherwise difficult to read for the layperson, a liberal policy is recommended for writing comments (since the difficulties cuased by the presence of an unnecessary comment is much less than the absence of a necessary comment).
+
+In general, we expect the corpus to have fewer comments than would be seen in typical production Alloy code in a professional environment, since the corpus includes Alloy code written as part of assignments and small personal projects. When the commenting habits are compared between the corpus and the reconstructed code:
+
+![](./Comparing%20number%20of%20comments%20in%20the%20corpus%20vs%20the%20reconstructed%20models.png)
+
+![](./Comparing%20total%20number%20of%20words%20in%20the%20comments%20in%20the%20corpus%20vs%20the%20reconstructed%20models.png)
+
+The key conclusions are:
+
+1) LLMs tend to comment less when reconstructing a model from a summary, in comparison to the original models.
+
+2) The comments written by LLMs tend to be shorter than the comments in the original model, possibly because the explanation of each element is presented in a separate section outside the code.
+
+The commenting behaviour of LLMs could be amended via amending the prompt to include phrases such as "Explain the code in comments, not in a separate section". LLMs which can reliably do this present a significant advantage to the user, who need not keep switching between the code and the explanation when reading the reconstructed model.
 
 - to do:
 
