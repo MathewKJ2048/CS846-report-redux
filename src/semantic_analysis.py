@@ -109,8 +109,12 @@ def comparative_distribution_analysis(func,quantity):
 			continue
 		original_als = parse(model_text)
 		recons_als = parse(recon_text)
-		original_dataset.append(func(original_als))
-		recons_dataset.append(func(recons_als))
+		if type(func(original_als)) == list:
+			original_dataset+=(func(original_als))
+			recons_dataset+=(func(recons_als))
+		else:
+			original_dataset.append(func(original_als))
+			recons_dataset.append(func(recons_als))
 	
 	print(len(original_dataset)/len(dset))
 	
@@ -130,6 +134,14 @@ def comment_analysis():
 	comparative_distribution_analysis(get_comment_number,"number of comments")
 	comparative_distribution_analysis(total_comment_size_words,"total number of words in the comments")
 
-comment_analysis()
+def signature_preliminary_analysis():
+	def number(parse_data):
+		return len(parse_data["sigs"])
+	def size(parse_data):
+		return [len(s.body) for s in parse_data["sigs"]]
+	comparative_distribution_analysis(number,"number of signatures")
+	comparative_distribution_analysis(size,"size of the signature bodies")
+
+signature_preliminary_analysis()
 
 
