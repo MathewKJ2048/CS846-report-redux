@@ -317,7 +317,6 @@ This section deals with the subset of models which summaries were created for
 - percentage of thinking vs code vs text
 
 manual analysis of 100 models for correctness?
-- number of predicates and signatures explained correctly
 
 
 
