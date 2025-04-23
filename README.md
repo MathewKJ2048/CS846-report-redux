@@ -301,6 +301,9 @@ When the relation between the sizes of the original model, the reconstruction an
 
 2) There is no correlation between the length of the summary and the length of the model being summarized, possibly because the LLM uses all the available response length to explain the model. In case of simple models, the explanation could be more verbose, expanding to fill up the response window.
 
+
+- correlation between distribution of comment lengths
+
 - to do:
 
 - number of sigs, facts, functions, predicates

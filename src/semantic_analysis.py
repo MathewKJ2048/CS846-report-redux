@@ -55,17 +55,15 @@ check NoSelfGrandpa for 4 Person
 
 """
 
-def analysis(model_text):
+def parse(model_text):
 	comments = get_comments(model_text)
 	model_text = re.sub(r"\/\/[^\n]*\n","\n",model_text)
 	model_text = enspacify(model_text)
-	sigs = {}
-	assertions = {}
-	predicates = {}
-	functions = {}
-	checks = {}
-	facts = {}
-	return comments, get_sigs(model_text)
+	
+	return {
+		"comments":comments, 
+		"sigs":get_sigs(model_text)
+	}
 
 class Signature:
 	def __init__(self,text):
@@ -86,13 +84,12 @@ class Signature:
 		return s
 
 
-
 def get_sigs(model_text):
 	sigs = re.findall(r"(?:abstract)? sig [^ ]* [^{}]*{[^{}]*}",model_text)
+	signatures = []
 	for s in sigs:
-		S = Signature(s)
-		print(S.stringify())
-	return sigs
+		signatures.append(Signature(s))
+	return signatures
 
 def get_comments(model_text):
 	model_text+=("\n")
@@ -100,5 +97,40 @@ def get_comments(model_text):
 	return [c[2:-1] for c in comments]
 
 
-# print(analysis(test_model)[0])
-print(analysis(test_model)[1])
+
+def comparative_distribution_analysis(func,quantity):
+	dset = get_dataset_reconstructed()
+	original_dataset = []
+	recons_dataset = []
+	for i in dset:
+		model_text = read_file(i)
+		recon_text = get_reconstructed(i)
+		if not recon_text:
+			continue
+		original_als = parse(model_text)
+		recons_als = parse(recon_text)
+		original_dataset.append(func(original_als))
+		recons_dataset.append(func(recons_als))
+	
+	print(len(original_dataset)/len(dset))
+	
+	generate_histograms(
+			[original_dataset,recons_dataset],
+			['original','reconstructed'],
+			"Comparing "+quantity+" in the corpus vs the reconstructed models")
+
+def get_comment_number(parse_data):
+	return len(parse_data["comments"])
+
+comparative_distribution_analysis(get_comment_number,"number of comments")
+
+
+ds = get_dataset_reconstructed()
+for i in ds:
+	reconsms = get_reconstructed(i)
+	if reconsms:
+		print(reconsms)
+		print("--------------------")
+		print(get_comments(reconsms))
+		i = input()
+

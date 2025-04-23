@@ -1,9 +1,7 @@
 from conf import *
 from lib import *
 
-def extract_first(di):
-	k = list(di.keys())[0]
-	return k
+
 
 def make_index():
 
