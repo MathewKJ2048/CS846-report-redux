@@ -8,4 +8,7 @@ from text_analysis import *
 
 ## reconstruction_analysis()
 
-correlation_analysis()
+# correlation_analysis()
+
+# corpus_signature_structural_analysis()
+# reconstructed_signature_structural_analysis()

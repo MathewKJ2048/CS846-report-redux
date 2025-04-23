@@ -221,10 +221,11 @@ def reconstructed_signature_structural_analysis():
 			codes[code]+=1
 		except:
 			pass
-	signature_structural_analysis_aux(codes,"distribution of inheritance hierarchies (recostructed)")
+	signature_structural_analysis_aux(codes,"distribution of inheritance hierarchies (reconstructed)")
 
 
 def signature_structural_analysis_aux(codes,title):
+	plt.clf()
 	colorlist = ["#ff0000","#00ff00","#0000ff","#ffff00","#ff00ff","#00ffff"]
 	N = len(colorlist)
 	codelist_full = list(codes.keys())
@@ -258,7 +259,6 @@ def signature_structural_analysis_aux(codes,title):
 	command = "dot -Tsvg \""+path+"\" -o \""+path.replace(".dot",".svg")+"\""
 	os.system(command)
 		
-corpus_signature_structural_analysis()
-reconstructed_signature_structural_analysis()
+
 
 
