@@ -1,5 +1,6 @@
 from conf import *
 from lib import *
+from graph_generator import *
 
 test_model = """
 module language/grandpa1 ---- Page 84, 85
@@ -114,7 +115,6 @@ class Signature:
 
 def get_sigs(model_text):
 	sigs = re.findall(r"(?:abstract)? sig [^ ]* [^{}]*{[^{}]*}",model_text)
-	print(sigs)
 	return [Signature(s) for s in sigs]
 
 def get_comments(model_text):
@@ -166,9 +166,6 @@ def comparative_distribution_analysis(func,quantity):
 			['original','reconstructed'],
 			"Comparing "+quantity+" in the corpus vs the reconstructed models")
 
-
-
-
 def comment_analysis():
 	def get_comment_number(parse_data):
 		return len(parse_data["comments"])
@@ -187,8 +184,81 @@ def signature_preliminary_analysis():
 	comparative_corelation_analysis(number,"number of signatures")
 
 
-slist = parse(test_model)["sigs"]
-print(slist)
-print(generate_tree(slist).encode())
+
+
+def corpus_signature_structural_analysis():
+	codes = {}
+	ct = 0
+	for i in index:
+		ct+=1
+		print(ct/len(index))
+		try:
+			model = read_file(i)
+			slist = parse(model)["sigs"]
+			code = generate_tree(slist).encode()
+			if code not in codes:
+				codes[code]=0
+			codes[code]+=1
+		except:
+			pass
+	signature_structural_analysis_aux(codes,"distribution of inheritance hierarchies (original)")
+
+def reconstructed_signature_structural_analysis():
+	codes = {}
+	ct = 0
+	dset = get_dataset_reconstructed()
+	for i in dset:
+		ct+=1
+		print(ct/len(index))
+		try:
+			model = get_reconstructed(i)
+			if not model:
+				continue
+			slist = parse(model)["sigs"]
+			code = generate_tree(slist).encode()
+			if code not in codes:
+				codes[code]=0
+			codes[code]+=1
+		except:
+			pass
+	signature_structural_analysis_aux(codes,"distribution of inheritance hierarchies (recostructed)")
+
+
+def signature_structural_analysis_aux(codes,title):
+	colorlist = ["#ff0000","#00ff00","#0000ff","#ffff00","#ff00ff","#00ffff"]
+	N = len(colorlist)
+	codelist_full = list(codes.keys())
+	def sortkey(x):
+		return -codes[x]
+	codelist_full.sort(key=sortkey)
+	codelist = codelist_full[:N]
+
+	total = sum([codes[t] for t in codelist_full])
+	percentage_list = [codes[c]/total for c in codelist]
+	labels = [str(i) for i in range(len(codelist))]
+
+	labels.append("others")
+	percentage_list.append(1-sum(percentage_list))	
+	colorlist.append("#888888")
+
+	plt.pie(
+		percentage_list,
+		labels = labels,
+		colors = colorlist,
+		autopct='%1.1f%%'
+	)	
+	plt.title(title)
+	plt.savefig(title)
+
+	path = "./out/"+title+".dot"
+	with open(path,"w") as fil:
+		fil.write(get_graph(codelist,colorlist[:-1]))
+	
+	os.system("clear")
+	command = "dot -Tsvg \""+path+"\" -o \""+path.replace(".dot",".svg")+"\""
+	os.system(command)
+		
+corpus_signature_structural_analysis()
+reconstructed_signature_structural_analysis()
 
 

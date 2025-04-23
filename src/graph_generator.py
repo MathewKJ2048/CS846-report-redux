@@ -32,8 +32,7 @@ def get_graph(codelist,colorlist):
 	s = "digraph rootgraph {\n rankdir=TB;\ncompund=true;\n"
 	for i in range(len(codelist)):
 		s+=get_subgraph(str(i),codelist[i],colorlist[i])
+	print(s)
 	return s+"\n}"
 
-
-print(get_graph(["00010111","0011"],["#ff0000","#00ff00"]))
 
