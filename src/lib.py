@@ -6,6 +6,17 @@ import re
 import matplotlib.pyplot as plt
 from conf import *
 
+def common(s1,s2):
+	s1 = enspacify(s1)
+	s2 = enspacify(s2)
+	s1 = s1.replace(" ","")
+	s2 = s2.replace(" ","")
+	N = min(len(s1),len(s2))
+	score = 0
+	for i in range(N):
+		if s1[i]==s2[i]:
+			score+=1
+	return score/N
 
 def enspacify(text):
 	text = text.replace("\n"," ")

@@ -63,7 +63,11 @@ def parse(model_text):
 	
 	return {
 		"comments":comments, 
-		"sigs":get_sigs(model_text)
+		"sigs":get_sigs(model_text),
+		"funs":get_elements("fun",model_text),
+		"preds":get_elements("pred",model_text),
+		"facts":get_elements("fact",model_text),
+		"asserts":get_elements("assert",model_text)
 	}
 
 
@@ -94,6 +98,27 @@ def generate_tree(signature_list):
 	return phantom
 
 
+class Element:
+	def __init__(self, text, is_fact=False):
+		if is_fact:
+			m = re.search(r"fact ({[^{}]*})",text)
+			self.body = m.group(1)
+			self.type = "fact"
+			self.name = ""
+			self.header = ""
+			return
+		m = re.search(r"([^ ]+) ([^ ]+) ([^{}]*)({[^{}]*})",text)
+		self.type = m.group(1)
+		self.name = m.group(2)
+		self.header = m.group(3)
+		self.body = m.group(4)
+	def stringify(self):
+		s = "type:"+self.type+"\n"
+		s += "name:"+self.name+"\n"
+		s += "header:"+self.header+"\n"
+		s += "body:"+self.body+"\n"
+		return s
+
 class Signature:
 	def __init__(self,text):
 		m = re.search(r"sig ([^ ]*) ([^{}]*)({[^{}]*})",text)
@@ -116,6 +141,13 @@ class Signature:
 def get_sigs(model_text):
 	sigs = re.findall(r"(?:abstract)? sig [^ ]* [^{}]*{[^{}]*}",model_text)
 	return [Signature(s) for s in sigs]
+
+def get_elements(element_type,model_text):
+	if element_type == "fact":
+		els = re.findall(element_type+r" {[^{}]*}",model_text)
+		return [Element(e,is_fact=True) for e in els]
+	els = re.findall(element_type+r" [^ ]* [^{}]*{[^{}]*}",model_text)
+	return [Element(e) for e in els]
 
 def get_comments(model_text):
 	model_text+=("\n")
@@ -182,6 +214,22 @@ def signature_preliminary_analysis():
 	comparative_distribution_analysis(number,"number of signatures")
 	comparative_distribution_analysis(size,"size of the signature bodies")
 	comparative_corelation_analysis(number,"number of signatures")
+
+def general_element_preliminary_analysis():
+	elements = ["funs","preds","facts","asserts"]
+	def number_function_generator(element_type):
+		def number(parse_data):
+			return len(parse_data[element_type])
+		return number
+	for e in elements:
+		comparative_distribution_analysis(number_function_generator(e),"number of "+e)
+		comparative_corelation_analysis(number_function_generator(e),"number of "+e)
+
+def general_element_distribution_analysis():
+	pass
+
+
+	
 
 
 
@@ -260,5 +308,11 @@ def signature_structural_analysis_aux(codes,title):
 	os.system(command)
 		
 
-
-
+p = parse(test_model)
+for x in p:
+	print(x)
+	try:
+		for t in p[x]:
+			print(t.stringify())
+	except:
+		pass

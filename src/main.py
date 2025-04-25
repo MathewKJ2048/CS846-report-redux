@@ -2,6 +2,7 @@
 
 from index import *
 from text_analysis import *
+from semantic_analysis import *
 
 
 ## summary_analysis()
@@ -12,3 +13,5 @@ from text_analysis import *
 
 # corpus_signature_structural_analysis()
 # reconstructed_signature_structural_analysis()
+
+general_element_preliminary_analysis()
