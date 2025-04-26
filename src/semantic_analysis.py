@@ -307,7 +307,7 @@ def signature_structural_analysis_aux(codes,title):
 	command = "dot -Tsvg \""+path+"\" -o \""+path.replace(".dot",".svg")+"\""
 	os.system(command)
 		
-
+"""
 p = parse(test_model)
 for x in p:
 	print(x)
@@ -316,3 +316,4 @@ for x in p:
 			print(t.stringify())
 	except:
 		pass
+"""
