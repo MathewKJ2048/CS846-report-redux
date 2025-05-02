@@ -113,9 +113,8 @@ def generate_histogram(data,title):
 	plt.xscale('log')
 	plt.xlabel('Number (logarithmic bins)')
 	plt.ylabel('Frequency (log scale)')
-	plt.title('Histogram with Power-Law Bins and Log Y-Axis')
 	plt.grid(True, which="both", ls="--", alpha=0.3)
-	plt.title(title)
+	# plt.title(title)
 	plt.savefig(title)
 
 def generate_histograms(data,legend,title):
@@ -129,10 +128,9 @@ def generate_histograms(data,legend,title):
 	plt.xscale('log')
 	plt.xlabel('Number (logarithmic bins)')
 	plt.ylabel('Frequency (log scale)')
-	plt.title('Histogram with Power-Law Bins and Log Y-Axis')
 	plt.grid(True, which="both", ls="--", alpha=0.3)
 	plt.legend()
-	plt.title(title)
+	# plt.title(title)
 	plt.savefig(title)
 
 
@@ -150,9 +148,9 @@ def correlation_scatter_plot(x_data,y_data,xv,yv,title):
 	# Add labels and title
 	plt.xlabel(xv+' (log scale)', fontsize=12)
 	plt.ylabel(yv+' (log scale)', fontsize=12)
-	plt.title('Scatter Plot of Correlation between '+xv+" and "+yv, fontsize=14)
+	# plt.title('Scatter Plot of Correlation between '+xv+" and "+yv, fontsize=14)
 	plt.grid(True)
-	plt.title(title)
+	# plt.title(title)
 	plt.savefig(title)
 
 class Node:

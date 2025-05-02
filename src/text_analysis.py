@@ -2,9 +2,6 @@ from conf import *
 from lib import *
 
 
-
-
-
 def correlation_analysis():
 	# correlate lines of model with lines of summary text
 	# correlate lines of model with lines of reconstructed
@@ -118,6 +115,12 @@ def corpus_analysis():
 	generate_histogram(number_of_characters,"Number of characters, distribution in corpus")
 	generate_histogram(number_of_lines,"Number of lines, distribution in corpus")
 	generate_histogram(number_of_tokens,"Number of tokens, distribution in corpus")
+
+
+corpus_analysis()
+# summary_analysis()
+reconstruction_analysis()
+correlation_analysis()
 
 
 

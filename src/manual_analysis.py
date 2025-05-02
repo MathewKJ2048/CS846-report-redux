@@ -130,6 +130,41 @@ def manual_analysis_main():
 
 
 
-manual_analysis_main()
+
+
+
+def result_chart():
+	with open("./out/table.json") as f:
+		table = json.load(f)
+	
+
+	result = {}
+	for t in table:
+		for e in table[t]:
+			rating = e["rating"]
+			if rating not in result:
+				result[rating]=0
+			result[rating]+=1
+	
+	final_result = {}
+	for t in result:
+		if t == "PROBLEM":
+			continue
+		final_result[t] = result[t]
+	print(final_result)
+	labels = [l for l in final_result]
+	X = [final_result[l] for l in labels]
+	plt.clf()
+	plt.pie(
+		X,labels=labels
+	)
+	title = "Distribution of ratings from manual analysis"
+	# plt.title(title)
+	plt.savefig(title)
+
+result_chart()
+
+# manual_analysis_main()
+
 
 

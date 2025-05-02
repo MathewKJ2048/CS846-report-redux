@@ -1,73 +1,29 @@
-module ufcg/softwareengineering/Ghcli
+open util/ordering[State] as ord // definimos el estado como un conjunto ordenado
 
-sig GithubUser{
-  followers: set GithubUser,
-  repos: set Repository,
-  comments: set Comment,
-  prs: set PullRequest
+sig TrafficLight { state : set State}
+abstract sig Color {}
+one sig Red, Ambar, Green extends Color {}
+
+sig State { light: one Color }
+
+fun colorSequence: set Color -> Color {
+
+	(Green->Ambar)+(Red->Green)+(Ambar->Red)+(Color<:iden)
 }
 
-sig Repository{
-  issues: set Issue,
-  pullRequests: set PullRequest
+pred changeLight[e1, e2: State]{ e1.light -> e2.light in colorSequence}
+
+fact traces{
+	init[ord/first]
+	all e: State-ord/last | let e1 = e.next | changeLight[e,e1]
 }
 
-sig RepositoryAsset{
-  repoComments: set Comment
-}
 
-sig PullRequest extends RepositoryAsset{}
+pred init[e:State]{e.light=Red}
 
-sig Issue extends RepositoryAsset{}
+pred search {ord/last.light = Ambar}
 
-pred follow[from, from': GithubUser, to: GithubUser]{
-  from'.followers = from.followers + to
-}
+pred searchAnyState { some e:State | e.light = Ambar}
 
-pred unfollow[from, from': GithubUser, to: GithubUser]{
-  from'.followers = from.followers - to
-}
-
-pred comment[from, from': GithubUser, repo, repo': RepositoryAsset, c: Comment]{
-  from'.comments = from.comments
-  repo'.repoComments = repo.repoComments + c
-}
-
-sig Comment{}
-
-fact issuesMustBelongToArepository{
-  all i: Issue | #i.~issues = 1
-}
-
-fact allIssuesAndPrsAreAssets{Issue + PullRequest = RepositoryAsset}
-
-fact prsMustBelongToRepo{
-  all p: PullRequest | #p.~pullRequests = 1
-}
-
-fact prsMustBelongToUser{
-  all p: PullRequest | #p.~prs = 1
-}
-
-fact commentsBelongToOneIssueAndUser{
-  all c: Comment | #c.~repoComments = 1 and #c.~comments = 1
-}
-
-fact commentsBelongToOnePRAndUser{
-  all c: Comment | #c.~repoComments = 1 and #c.~comments = 1
-}
-
-fact allReposBelongToAnUser{
-  all r: Repository | r in GithubUser.*repos
-}
-
-fact reposHaveOneOwner{
-  all r: Repository | #r.~repos = 1
-}
-
-fact doesntFollowYourself{
-  no u: GithubUser, f: u.followers | f = u
-}
-
-pred show(){}
-run show for 8
+run search for 100 State, 1 TrafficLight
+run searchAnyState for 100 State, 1 TrafficLight

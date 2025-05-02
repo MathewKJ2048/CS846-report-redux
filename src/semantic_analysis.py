@@ -225,8 +225,7 @@ def general_element_preliminary_analysis():
 		comparative_distribution_analysis(number_function_generator(e),"number of "+e)
 		comparative_corelation_analysis(number_function_generator(e),"number of "+e)
 
-def general_element_distribution_analysis():
-	pass
+
 
 
 	
@@ -296,7 +295,7 @@ def signature_structural_analysis_aux(codes,title):
 		colors = colorlist,
 		autopct='%1.1f%%'
 	)	
-	plt.title(title)
+	# plt.title(title)
 	plt.savefig(title)
 
 	path = "./out/"+title+".dot"
@@ -317,3 +316,10 @@ for x in p:
 	except:
 		pass
 """
+
+
+comment_analysis()
+signature_preliminary_analysis()
+general_element_preliminary_analysis()
+corpus_signature_structural_analysis()
+reconstructed_signature_structural_analysis()
