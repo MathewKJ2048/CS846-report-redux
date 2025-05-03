@@ -368,7 +368,7 @@ function encode(root): # returns a unique string representation of the tree whos
 		return ""
 	child_codes = []
 	for c in root.children:
-		child_codes.append(tree_hash(root))
+		child_codes.append(encode(root))
 	s = "0"
 	child_codes.sort()
 	for c in child_codes:

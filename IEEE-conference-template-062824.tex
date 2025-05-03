@@ -200,7 +200,11 @@ Want to extend this? For example, add siblings or marriages between cousins?
 
 \subsection{Data Collection}
 
-IMAGE HERE
+\begin{figure}[htbp]
+    \centerline{\includegraphics[width=\linewidth]{"./images/scraping.png"}}
+    \caption{Data collection.}
+    \label{fig}
+    \end{figure}
 
 The primary data source for Alloy models is GitHub, whose public repositories with \verb|.als| files are scraped by a script. After scraping, the files are passed through a filter which determines the file type, before moving the files to local storage.
 
@@ -247,7 +251,11 @@ Engineering a pipeline to extract data automatically from LLMs has the following
     \item Reproducibility - Since LLMs are stochastic, the results produced are pseudorandom. For independent verification, the results must be reproducible.
 \end{itemize}
 
-IMAGE HERE
+\begin{figure}[htbp]
+    \centerline{\includegraphics[width=\linewidth]{"./images/process.png"}}
+    \caption{LLM control process.}
+    \label{fig}
+    \end{figure}
 
 The control script reads a file, constructs the prompt from the file, and feeds it into the LLM. The seed is set to be 0, for reproducibility. The output is stored in a \verb|.stream| file, which consists of the following metadata in addition to the response:
 
@@ -266,7 +274,11 @@ After each response generation, a \verb|.stream| file is created and stored in p
 
 \subsection{Prompt Engineering}
 
-PIPELINEIMAGE
+\begin{figure}[htbp]
+    \centerline{\includegraphics[width=\linewidth]{"./images/pipeline.png"}}
+    \caption{LLM pipeline.}
+    \label{fig}
+    \end{figure}
 
 In accordance with the standard best pracitces for prompt engineering the instructions were appended to the beginning of the prompt, to ensure that sufficient attention was allocated to the instruction. 
 
@@ -473,16 +485,56 @@ In general, inheritance can be represented via a directed acyclic graph [cite], 
     
     While determining isomorphism for arbitrary graphs is a hard problem, determining isomorphism for sets of rooted trees is simple.
 
+    \newcommand{\FUNCTION}[2]{\STATE \textbf{function} #1(#2)}
+    \newcommand{\ENDFUNCTION}{\STATE \textbf{end function}}
 
-ALGORITHM GOES here
+    \begin{center}
+        \textbf{Algorithm:} Binary encoding
+        \end{center}
+        \begin{algorithmic}[1]  % [1] enables line numbers
+        \REQUIRE $root$ points to the root node of tree
+        \ENSURE $s$ is the binary encoding of $root$
+        \FUNCTION{encode}{$root$}
+        \IF{$root = nullptr$}
+            \RETURN $\varepsilon$
+        \ENDIF 
+        \STATE $c \gets [encode(c) : c \in root.children]$
+        \STATE $s \gets ``0''$
+        \STATE Sort $c$ lexicographically
+        \FOR{$i \gets 1$ \TO $c.length$}
+        \STATE $s \gets s \cdot c[i]$
+        \ENDFOR
+        \STATE $s \gets s \cdot ``1''$
+        \RETURN $s$
+        \ENDFUNCTION
+        \end{algorithmic}
 
 The given algorithm produces a unique binary string for every rooted tree. For a forest of trees, a new tree is constructed where each top-level node in the forest is a child of a ultimate root node, to which this algorithm is then applied.
 
-ALGORITHM GOES HERE
+\begin{center}
+    \textbf{Algorithm:} Tree decoding
+    \end{center}
+    \begin{algorithmic}[1]  % [1] enables line numbers
+    \ENSURE $s$ is the binary encoding of a tree
+    \REQUIRE $root$ points to the root node of decoded tree
+    \FUNCTION{decode}{$s$}
+    \STATE $root \gets nullptr$
+    \FOR{$i \gets 1$ \TO $s.length$}
+        \STATE $n \gets s[i]$
+        \IF{$n = ``0''$}
+        \STATE $c \gets Node()$
+        \STATE $c.parent \gets root$
+        \STATE $root \gets c$
+        \ELSE
+        \STATE $root \gets root.parent$
+        \ENDIF
+    \ENDFOR
+    \RETURN $root$
+    \ENDFUNCTION
+    \end{algorithmic}
 
 For brevity, a formal proof of correctness of the algorithms is omitted. The existence of a unique encoding and a reversible reconstruction function prove that the encoding is bijective. Applying this algorithm to the graphs associated with type signature inheritance relations, we used it along with a hashtable to enumerate the different inheritance relations in the corpus and identify the relative distributions.
 
-ALGORITHM GOEA HERE
 
 \begin{figure}[htbp]
     \centerline{\includegraphics[width=\linewidth]{"./distribution of inheritance hierarchies (original).png"}}
@@ -490,7 +542,12 @@ ALGORITHM GOEA HERE
     \label{fig}
     \end{figure}
 
-LEGEND SVG GOES HERE
+    \begin{figure}[htbp]
+        \centerline{\includegraphics[width=\linewidth]{"./out/original.png"}}
+        \caption{Legend: Inheritance Structures (original).}
+        \label{fig}
+        \end{figure}
+
 
 The legend shows the graph representations of the inheritance structures, after the introduction of a root node for the forest. The original corpus consists of a large number of models with no ingeritance at all (as seen in the graphs with a depth of 1), with a few more complex structures occuring often (as seen in the graphs with a depth greater than 1).
     
@@ -501,7 +558,13 @@ The legend shows the graph representations of the inheritance structures, after 
     \label{fig}
     \end{figure}
 
-LEGEND SVG HERE
+    \begin{figure}[htbp]
+        \centerline{\includegraphics[width=\linewidth]{"./out/reconstructed.png"}}
+        \caption{Legend: Inheritance Structures (reconstructed).}
+        \label{fig}
+        \end{figure}
+
+
 
 In comparison, the models generated by the LLM consist mainly of simple inheritance structures, which suggests that the generated code often consists of signatures that do not inherit from other signatures. This could either be due to some inherent bias against inheritance when writing models, or due to the inheritance relations not being captured accurately in the summaries from which the models are reconstructed.
 

@@ -12,5 +12,5 @@
 		"**/.DS_Store": true,
 		"**/Thumbs.db": true
 	},
-	"svg.preview.background": "custom"
+	"svg.preview.background": "white"
 }
