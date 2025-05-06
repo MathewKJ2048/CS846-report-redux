@@ -202,7 +202,7 @@ Want to extend this? For example, add siblings or marriages between cousins?
     \label{fig}
     \end{figure}
 
-The primary data source for Alloy models is GitHub, whose public repositories with \verb|.als| files are scraped by a script. After scraping, the files are passed through a filter which determines the file type, before moving the files to local storage.
+The primary data source for Alloy models is GitHub, whose public repositories with \verb|.als| files are scraped by a script \cite{catalyst}. After scraping, the files are passed through a filter which determines the file type, before moving the files to local storage.
 
 Given a corpus of \verb|.als| files containing Alloy code, the version of Alloy is determined via a simple check of the keywords used. Alloy 6 is not back-compatible with earlier versions of Alloy, and is characterized by the following keywords (which do not appear in Alloy 5 code):
 
@@ -479,7 +479,7 @@ In general, inheritance can be represented via a directed acyclic graph \cite{ja
     Due to additional constraints imposed on type signatures in Alloy, the graph associated with the relations between them forms a forest-like structure, one with a set of rooted trees \cite{jackson-reference}
     in the top-level types.
     
-    While determining isomorphism for arbitrary graphs is a hard problem \cite{graph-isomorphism}, determining isomorphism for sets of rooted trees is simple.
+    While determining isomorphism for arbitrary graphs is a hard problem \cite{graph-isomorphism}, determining isomorphism for sets of rooted trees is simple \cite{AHU}.
 
     \newcommand{\FUNCTION}[2]{\STATE \textbf{function} #1(#2)}
     \newcommand{\ENDFUNCTION}{\STATE \textbf{end function}}
@@ -665,6 +665,8 @@ Given a set of valid models, a possible extension of this project is to use the 
 \bibitem{jackson-model} D. Jackson, ``Software Abstractions - Logic, Language and Analysis'', MIT press, Feb 12 2016, pp. 84--85
 \bibitem{jackson-reference} D. Jackson, ``Software Abstractions - Logic, Language and Analysis'', MIT press, Feb 12 2016, Appendix B, pp. 253--265
 \bibitem{graph-isomorphism} J. Ren, T. Li, ``Graph isomorphism—Characterization and efficient algorithms,'' in High-Confidence Computing, Volume 4, Issue 4, 2024
+\bibitem{AHU} F. Ingels, ``Revisiting Tree Isomorphism: An Algorithmic Bric-à-Brac,'' in HAL Open Science, hal-04232137, Feb 13 2024
+\bibitem{catalyst} N. Day, R. Yan, E. Eid, ``catalyst'' Online: https://github.com/WatForm/catalyst
 \end{thebibliography}
 
 
