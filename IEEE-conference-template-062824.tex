@@ -235,7 +235,7 @@ Alloy strings are enclosed in double quotes. Before checking for the presence of
     // This is an Alloy 6 model
 \end{lstlisting}
 
-For models whose version is confirmed to be Alloy 6. No modification is done to models which could be interpreted as either Alloy 5 or Alloy 6.
+This modification is performed for models whose version is confirmed to be Alloy 6. No modification is done to models which could be interpreted as either Alloy 5 or Alloy 6.
 
 \subsection{Invoking the LLM}
 
@@ -276,9 +276,9 @@ After each response generation, a \verb|.stream| file is created and stored in p
     \label{fig}
     \end{figure}
 
-In accordance with the standard best pracitces for prompt engineering the instructions were appended to the beginning of the prompt, to ensure that sufficient attention was allocated to the instruction. 
+In accordance with the standard best practices for prompt engineering the instructions were appended to the beginning of the prompt, to ensure that sufficient attention was allocated to the instruction. 
 
-The context was clearly separated from the instructions, so the line between the where the instructions to the LLM ends and the model to analyze begins is clear. The two prepended instructions are:
+The context was clearly separated from the instructions, so the line between where the the instructions to the LLM ends and the model to analyze begins is clear. The two prepended instructions are:
 
 \begin{lstlisting}
     "This is sample Alloy code. Provide an accurate summary of the code, make it as detailed as possible\n"+summary
@@ -288,7 +288,7 @@ The context was clearly separated from the instructions, so the line between the
     "Here is a summary of an Alloy model in plain English. Generate the Alloy code:"+summary+"\n Provide only Alloy code, not a summary"
 \end{lstlisting}
 
-For the second experiment (the generation of the code from the prompt), about 91\% of the queries resulted in Alloy code. The presence of code in the response was identified by looking for the presence of triple quotes in the response, which is used to indicate code segments.
+For the second experiment (the generation of the code from the prompt), about 91\% of the queries resulted in code. The presence of code in the response was identified by looking for the presence of triple quotes in the response, which is used to indicate code segments.
 
 The general structure of a response by DeepSeek is:
 
@@ -463,7 +463,7 @@ Alloy models describe relations between atoms, whose types are described by sign
         \label{fig}
         \end{figure}
 
-        This shows that the reconstructed models tends to have a number of signatures lesser than or equal to the number of signatures in the original model, with a quick drop-off for models having more than 10 signatures, which supports the conclusions drawn from the earlier results.
+        This shows that the reconstructed models tends to have a number of signatures less than or equal to the number of signatures in the original model, with a quick drop-off for models having more than 10 signatures, which supports the conclusions drawn from the earlier results.
 
         Similar analyses, when performed for other elements like facts, preds, asserts and funs, do not produce enough data to draw any strong conclusions. The distributions are included in the appendix.
 
