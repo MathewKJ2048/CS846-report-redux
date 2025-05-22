@@ -93,6 +93,8 @@ def manual_analysis_main():
 			continue
 		remaining_index.append(c)
 
+	ct = 0
+
 	for i in remaining_index:
 		model_text = read_file(i)
 		summary_think, summary_text = get_summary(i)
@@ -107,7 +109,7 @@ def manual_analysis_main():
 		for t in ["sigs","funs","preds","asserts"]:
 			for s in p[t]:
 				os.system("clear")
-				print(len(remaining_index))
+				print(len(remaining_index)-ct)
 				print(t)
 				print(s.name)
 				print("1 - absent\n2 - incorrect\n3 - correct\n4 - indeterminate")
@@ -125,6 +127,8 @@ def manual_analysis_main():
 
 		with open("./out/table.json","w") as f:
 			json.dump(table,f)
+
+		ct+=1
 	
 	print(len(remaining_index))
 
@@ -164,7 +168,6 @@ def result_chart():
 
 result_chart()
 
-# manual_analysis_main()
 
 
 
